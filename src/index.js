@@ -1,5 +1,3 @@
-import TableProvider from './TableProvider';
-import ThConsumer from './ThConsumer';
-
-export default TableProvider;
-export const Th = ThConsumer;
+export { default } from './TableProvider';
+export { default as Th } from './ThConsumer';
+export { default as withTable } from './withTable';
