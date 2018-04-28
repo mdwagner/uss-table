@@ -1,59 +1,68 @@
 import React, { Component, createContext, forwardRef } from 'react';
+import PropTypes from 'prop-types';
 
 const { Provider, Consumer } = createContext({
-  sortBy: {},
-  orderBy: 'asc',
-  handleSortBy: () => {}
+  sortBy: 'sort',
+  orderBy: 'order',
+  handleSortBy: () => {},
+  handleClassNames: () => {}
 });
 export { Consumer };
 
 class TableProvider extends Component {
+  static propTypes = {
+    className: PropTypes.string,
+    defaultHandleClassNames: PropTypes.func,
+    defaultOrderBy: PropTypes.string.isRequired,
+    defaultSortBy: PropTypes.string.isRequired,
+    onSortChange: PropTypes.func
+  };
+
   constructor(props) {
     super(props);
+
     this.handleSortBy = this.handleSortBy.bind(this);
+
     this.state = {
       sortBy: props.defaultSortBy,
       orderBy: props.defaultOrderBy,
-      handleSortBy: this.handleSortBy
+      handleSortBy: this.handleSortBy,
+      handleClassNames: props.defaultHandleClassNames || (() => (''))
     };
   }
 
-  handleSortBy(newSortKey) {
-    // have newSortKey to sort on
-    // need sortBy from state in order to change it (if needed)
-    // need orderBy from state to change it
-    // also look for oldSortKey to change it back to false
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        orderBy: 'asc'
-      };
-      const oldSort = Object.keys(prevState.sortBy).filter(key => !!prevState.sortBy[key]); // should only be one
-      if (oldSort.length === 1) {
-        const oldSortKey = oldSort[0];
+  handleSortBy(newSortBy) {
+    if (typeof newSortBy !== 'string') {
+      console.error('Invalid Type', typeof newSortBy);
+      return;
+    }
 
-        if (newSortKey !== oldSortKey) { // new sort key
-          newState.sortBy[oldSortKey] = false;
-          newState.sortBy[newSortKey] = true;
-          newState.orderBy = 'desc';
-        } else { // old sort key, instead change order
-          if (prevState.orderBy === 'asc') {
-            newState.orderBy = 'desc';
-          } else {
-            newState.orderBy = 'asc';
-          }
+    this.setState(
+      ({ sortBy: oldSortBy, orderBy: oldOrderBy }) => {
+        if (newSortBy !== oldSortBy) {
+          // new sort by
+          const orderBy = this.props.defaultOrderBy;
+          return {
+            sortBy: newSortBy,
+            orderBy
+          };
+        } else {
+          // same sort by, change order by
+          const orderBy = oldOrderBy === 'asc' ? 'desc' : 'asc';
+          return {
+            orderBy
+          };
         }
-        return newState;
-      } else {
-        return prevState;
+      },
+      () => {
+        if (this.props.onSortChange) {
+          this.props.onSortChange({
+            sortBy: this.state.sortBy,
+            orderBy: this.state.orderBy
+          });
+        }
       }
-    }, () => console.log( 'Currently Sorting on', Object.keys(this.state.sortBy).filter(k => !!this.state.sortBy[k])[0] ));
-
-    // TODO
-    // }, this.props.onSortChange({
-    //   sortBy: this.state.sortBy,
-    //   orderBy: this.state.orderBy
-    // }));
+    );
   }
 
   render() {

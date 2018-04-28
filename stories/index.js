@@ -5,7 +5,7 @@ import Table, { Th } from '../src';
 
 storiesOf('Table', module)
   .add('example 1', () => (
-    <Table>
+    <Table defaultSortBy="A" defaultOrderBy="asc">
       <thead>
         <tr>
           <th>A</th>
@@ -33,12 +33,18 @@ storiesOf('Table', module)
     </Table>
   ))
   .add('example 2', () => (
-    <Table defaultSortBy={{ A: true, B: false, C: false }} defaultOrderBy="asc">
+    <Table
+      defaultSortBy="B"
+      defaultOrderBy="asc"
+      defaultHandleClassNames={({sortBy, sortKey}) => {
+        return sortBy === sortKey ? 'selected' : '';
+      }}
+      onSortChange={action('onSortChange')}>
       <thead>
         <tr>
           <Th sortKey="A">A</Th>
           <Th sortKey="B">B</Th>
-          <Th sortKey="C">C</Th>
+          <Th handleClassNames={({orderBy}) => orderBy} sortKey="C">C</Th>
         </tr>
       </thead>
       <tbody>
@@ -61,5 +67,5 @@ storiesOf('Table', module)
     </Table>
   ))
   .add('example 3 (refs)', () => (
-    <Table ref={(r) => { r && console.log('table ref', r); }} />
+    <Table defaultSortBy="A" defaultOrderBy="asc" ref={r => { r && action('Table Ref')(r) }} />
   ));

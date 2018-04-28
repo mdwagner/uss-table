@@ -1,30 +1,56 @@
-import React, { forwardRef } from 'react';
+import React, { Component, forwardRef } from 'react';
+import PropTypes from 'prop-types';
 import { Consumer } from './TableProvider';
 
-const Th = ({
-  className,
-  children,
-  sortKey,
-  determineClassNames,
-  tableContext,
-  ...props
-}) => {
-  const classes = [className || ''];
+class Th extends Component {
+  static propTypes = {
+    className: PropTypes.string,
+    handleClassNames: PropTypes.func,
+    sortKey: PropTypes.string.isRequired,
+    tableContext: PropTypes.shape({
+      sortBy: PropTypes.string.isRequired,
+      orderBy: PropTypes.string.isRequired,
+      handleClassNames: PropTypes.func.isRequired,
+      handleSortBy: PropTypes.func.isRequired
+    }).isRequired
+  };
 
-  if (determineClassNames && typeof determineClassNames === 'function') {
-    classes.push(determineClassNames({...tableContext, sortKey}));
+  render() {
+    const {
+      children,
+      className,
+      handleClassNames,
+      sortKey,
+      tableContext,
+      ...rest
+    } = this.props;
+
+    const cssClasses = [className || ''];
+    const handler = handleClassNames || tableContext.handleClassNames;
+
+    const newClasses = handler({
+      sortBy: tableContext.sortBy,
+      orderBy: tableContext.orderBy,
+      sortKey
+    });
+    if (typeof newClasses === 'string') {
+      cssClasses.push(newClasses);
+    } else {
+      console.error('Invalid Return Type', typeof newClasses);
+    }
+    const classes = cssClasses.filter(val => !!val).join(' ');
+
+    return (
+      <th {...rest}
+        className={classes}
+        onClick={(evt) => {
+          evt.preventDefault();
+          tableContext.handleSortBy(sortKey);
+        }}>
+        {children}
+      </th>
+    );
   }
-
-  return (
-    <th {...props}
-      className={classes.join(' ')}
-      onClick={(e) => {
-        e.preventDefault();
-        sortKey && tableContext.handleSortBy(sortKey);
-      }}>
-      {children}
-    </th>
-  );
 }
 
 export default forwardRef((props, ref) => (
