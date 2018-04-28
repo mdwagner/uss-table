@@ -11,6 +11,10 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   },
+  "peerDependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
   "devDependencies": {
     "@storybook/react": "^3.4.3",
     "@storybook/storybook-deployer": "^2.3.0",
