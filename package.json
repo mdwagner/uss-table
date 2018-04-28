@@ -1,0 +1,28 @@
+{
+  "name": "uss-table",
+  "version": "0.0.1",
+  "description": "An unbelievably-stupid-simple table component using React 16.3+ context api.",
+  "main": "index.js",
+  "scripts": {
+    "storybook": "start-storybook -p 9001 -c .storybook"
+  },
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "@storybook/react": "^3.4.3",
+    "babel-core": "^6.26.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwagner/uss-table.git"
+  },
+  "keywords": [],
+  "author": "mdwagner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdwagner/uss-table/issues"
+  },
+  "homepage": "https://github.com/mdwagner/uss-table#readme"
+}
