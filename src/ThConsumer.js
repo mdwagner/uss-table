@@ -15,6 +15,17 @@ class Th extends Component {
     }).isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(evt) {
+    const { tableContext, sortKey } = this.props;
+    evt.preventDefault();
+    tableContext.handleSortBy(sortKey);
+  }
+
   render() {
     const {
       children,
@@ -43,10 +54,7 @@ class Th extends Component {
     return (
       <th {...rest}
         className={classes}
-        onClick={(evt) => {
-          evt.preventDefault();
-          tableContext.handleSortBy(sortKey);
-        }}>
+        onClick={this.handleClick}>
         {children}
       </th>
     );
