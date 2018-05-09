@@ -1,9 +1,12 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { withInfo } from '@storybook/addon-info';
 import { action } from '@storybook/addon-actions';
 import Table, { Th } from '../src';
 
-storiesOf('Table', module)
+const stories = storiesOf('Table', module);
+
+stories
   .add('example 1', () => (
     <Table defaultSortBy="A" defaultOrderBy="asc">
       <thead>
